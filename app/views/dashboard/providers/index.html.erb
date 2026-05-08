@@ -1,0 +1,51 @@
+<div class="page-header">
+  <h1>SMTP Providers</h1>
+  <%= link_to "New Provider", new_dashboard_provider_path, class: "btn btn--primary" %>
+</div>
+
+<div class="card">
+  <div class="card__body card__body--flush">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Priority</th>
+          <th>Name</th>
+          <th>Host</th>
+          <th>From</th>
+          <th>Failures</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @providers.each do |provider| %>
+          <tr>
+            <td class="text-center"><%= provider.priority %></td>
+            <td><strong><%= provider.name %></strong></td>
+            <td class="text-mono text-sm"><%= provider.host %>:<%= provider.port %></td>
+            <td class="text-muted text-sm"><%= provider.from_address %></td>
+            <td class="text-center <%= provider.failure_count > 0 ? "text-error" : "" %>">
+              <%= provider.failure_count %>
+            </td>
+            <td>
+              <% if provider.active? %>
+                <span class="status-badge status-badge--sent"><%= provider.priority == 1 ? "Primary" : "Fallback" %></span>
+              <% else %>
+                <span class="status-badge status-badge--failed">Inactive</span>
+              <% end %>
+            </td>
+            <td class="text-right">
+              <%= link_to "Edit", edit_dashboard_provider_path(provider), class: "btn btn--xs btn--ghost" %>
+              <%= button_to provider.active? ? "Disable" : "Enable",
+                    toggle_active_dashboard_provider_path(provider), method: :patch,
+                    class: "btn btn--xs #{provider.active? ? "btn--danger" : "btn--secondary"}" %>
+              <%= button_to "Delete", dashboard_provider_path(provider), method: :delete,
+                    class: "btn btn--xs btn--danger",
+                    data: { turbo_confirm: "Delete this provider? This cannot be undone." } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

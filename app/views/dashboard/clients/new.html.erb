@@ -1,0 +1,29 @@
+<div class="page-header">
+  <%= link_to "← Clients", dashboard_clients_path, class: "back-link" %>
+  <h1>New API Client</h1>
+</div>
+
+<div class="card card--form">
+  <div class="card__body">
+    <%= form_with model: @client, url: dashboard_clients_path, class: "form" do |f| %>
+      <% if @client.errors.any? %>
+        <div class="form-errors">
+          <% @client.errors.full_messages.each do |msg| %>
+            <p><%= msg %></p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="field">
+        <%= f.label :name, "Client Name" %>
+        <%= f.text_field :name, placeholder: "e.g. WordPress Site", class: "input", autofocus: true %>
+        <span class="field-hint">A friendly name to identify this service in the email log.</span>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "Generate Token & Create", class: "btn btn--primary" %>
+        <%= link_to "Cancel", dashboard_clients_path, class: "btn btn--ghost" %>
+      </div>
+    <% end %>
+  </div>
+</div>

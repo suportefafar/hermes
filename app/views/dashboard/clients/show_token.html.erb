@@ -1,0 +1,27 @@
+<div class="page-header">
+  <h1>Client Created</h1>
+</div>
+
+<div class="card card--form">
+  <div class="card__body">
+    <div class="token-reveal">
+      <div class="token-reveal__icon">🔑</div>
+      <h2>Copy your API token now</h2>
+      <p class="token-reveal__warning">This token will <strong>never be shown again</strong>. Store it somewhere safe.</p>
+
+      <div class="token-box" id="token-box">
+        <code id="client-token"><%= @raw_token %></code>
+        <button class="btn btn--xs btn--ghost" onclick="navigator.clipboard.writeText(document.getElementById('client-token').innerText).then(() => this.innerText = 'Copied!')">Copy</button>
+      </div>
+
+      <dl class="dl dl--inline">
+        <dt>Client Name</dt><dd><%= @client.name %></dd>
+        <dt>Status</dt><dd>Active</dd>
+      </dl>
+
+      <div class="form-actions">
+        <%= link_to "Go to Clients", dashboard_clients_path, class: "btn btn--primary" %>
+      </div>
+    </div>
+  </div>
+</div>

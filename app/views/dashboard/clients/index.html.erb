@@ -1,0 +1,42 @@
+<div class="page-header">
+  <h1>API Clients</h1>
+  <%= link_to "New Client", new_dashboard_client_path, class: "btn btn--primary" %>
+</div>
+
+<div class="card">
+  <div class="card__body card__body--flush">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Token (prefix)</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @clients.each do |client| %>
+          <tr>
+            <td><strong><%= client.name %></strong></td>
+            <td class="text-mono text-muted"><%= client.token_digest[0..15] %>…</td>
+            <td>
+              <% if client.active? %>
+                <span class="status-badge status-badge--sent">Active</span>
+              <% else %>
+                <span class="status-badge status-badge--failed">Revoked</span>
+              <% end %>
+            </td>
+            <td class="text-muted"><%= client.created_at.strftime("%b %d, %Y") %></td>
+            <td>
+              <%= button_to client.active? ? "Revoke" : "Activate",
+                    toggle_active_dashboard_client_path(client), method: :patch,
+                    class: "btn btn--xs #{client.active? ? "btn--danger" : "btn--secondary"}",
+                    data: { turbo_confirm: "Are you sure?" } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

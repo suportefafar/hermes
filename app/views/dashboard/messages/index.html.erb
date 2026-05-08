@@ -1,0 +1,50 @@
+<div class="page-header">
+  <h1>Messages</h1>
+  <span class="page-subtitle"><%= @messages.total_count %> total</span>
+</div>
+
+<!-- Filters -->
+<div class="card card--filters">
+  <%= form_with url: dashboard_messages_path, method: :get, local: true, class: "filter-form" do |f| %>
+    <%= f.text_field :q, value: params[:q], placeholder: "Search recipient, subject…", class: "input" %>
+    <%= f.select :status, [["All Statuses", ""], *EmailMessage.statuses.keys.map { |s| [s.capitalize, s] }],
+        { selected: params[:status] }, class: "input input--select" %>
+    <%= f.select :client_id, [["All Clients", ""], *@clients.map { |c| [c.name, c.id] }],
+        { selected: params[:client_id] }, class: "input input--select" %>
+    <%= f.submit "Filter", class: "btn btn--secondary" %>
+    <%= link_to "Clear", dashboard_messages_path, class: "btn btn--ghost" %>
+  <% end %>
+</div>
+
+<div class="card">
+  <div class="card__body card__body--flush">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Client</th>
+          <th>To</th>
+          <th>Subject</th>
+          <th>Attempts</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @messages.each do |msg| %>
+          <tr>
+            <td class="text-muted text-nowrap"><%= msg.created_at.strftime("%m/%d %H:%M") %></td>
+            <td><span class="badge badge--client"><%= msg.api_client&.name || "—" %></span></td>
+            <td class="text-truncate"><%= Array(msg.to_addresses).join(", ") %></td>
+            <td class="text-truncate"><%= msg.subject %></td>
+            <td class="text-center"><%= msg.attempts %></td>
+            <td><span class="status-badge status-badge--<%= msg.status %>"><%= msg.status %></span></td>
+            <td><%= link_to "View", dashboard_message_path(msg), class: "btn btn--xs btn--ghost" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%= paginate @messages %>

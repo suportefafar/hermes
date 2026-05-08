@@ -1,0 +1,41 @@
+<div class="page-header">
+  <h1>Settings</h1>
+</div>
+
+<div class="card card--form">
+  <div class="card__body">
+    <%= form_with url: dashboard_settings_path, method: :patch, class: "form" do |f| %>
+      <% if flash[:notice] %>
+        <div class="flash flash--notice"><%= flash[:notice] %></div>
+      <% end %>
+
+      <div class="field">
+        <label>Rate Limit (emails per minute)</label>
+        <input type="number" name="settings[rate_limit_per_minute]"
+               value="<%= @settings.find { |s| s.key == "rate_limit_per_minute" }&.value %>"
+               class="input" min="1" max="10000" />
+        <span class="field-hint">Global cap. Excess emails wait in the queue for the next minute window.</span>
+      </div>
+
+      <div class="field">
+        <label>Fallback Threshold (%)</label>
+        <input type="number" name="settings[fallback_threshold_pct]"
+               value="<%= @settings.find { |s| s.key == "fallback_threshold_pct" }&.value %>"
+               class="input" min="1" max="100" />
+        <span class="field-hint">If the primary provider fails this % of the last batch, switch to the fallback provider.</span>
+      </div>
+
+      <div class="field">
+        <label>Max Retry Attempts</label>
+        <input type="number" name="settings[max_retry_attempts]"
+               value="<%= @settings.find { |s| s.key == "max_retry_attempts" }&.value %>"
+               class="input" min="1" max="10" />
+        <span class="field-hint">Number of soft-bounce retries before marking as permanently failed.</span>
+      </div>
+
+      <div class="form-actions">
+        <input type="submit" value="Save Settings" class="btn btn--primary" />
+      </div>
+    <% end %>
+  </div>
+</div>

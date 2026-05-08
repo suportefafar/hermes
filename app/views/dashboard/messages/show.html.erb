@@ -1,0 +1,108 @@
+<div class="page-header">
+  <div>
+    <%= link_to "← Messages", dashboard_messages_path, class: "back-link" %>
+    <h1 class="text-truncate"><%= @message.subject %></h1>
+  </div>
+  <% unless @message.pending? %>
+    <%= button_to "Resend", resend_dashboard_message_path(@message), method: :post,
+          class: "btn btn--primary", data: { turbo_confirm: "Queue this message for resend?" } %>
+  <% end %>
+</div>
+
+<!-- Meta info -->
+<div class="detail-grid">
+  <div class="card">
+    <div class="card__header"><h2>Headers</h2></div>
+    <div class="card__body">
+      <dl class="dl">
+        <dt>Status</dt>
+        <dd><span class="status-badge status-badge--<%= @message.status %>"><%= @message.status %></span></dd>
+
+        <dt>From</dt>
+        <dd><%= @message.from_address.presence || "(provider default)" %></dd>
+
+        <dt>Reply-To</dt>
+        <dd><%= @message.reply_to.presence || "—" %></dd>
+
+        <dt>To</dt>
+        <dd><%= Array(@message.to_addresses).join(", ") %></dd>
+
+        <% if @message.cc_addresses.present? %>
+          <dt>CC</dt>
+          <dd><%= @message.cc_addresses.join(", ") %></dd>
+        <% end %>
+
+        <% if @message.bcc_addresses.present? %>
+          <dt>BCC</dt>
+          <dd><%= @message.bcc_addresses.join(", ") %></dd>
+        <% end %>
+
+        <dt>Client</dt>
+        <dd><%= @message.api_client&.name || "—" %></dd>
+
+        <dt>Attempts</dt>
+        <dd><%= @message.attempts %></dd>
+
+        <dt>Next attempt</dt>
+        <dd><%= @message.next_attempt_at&.strftime("%b %d %H:%M:%S") || "—" %></dd>
+
+        <dt>Created</dt>
+        <dd><%= @message.created_at.strftime("%b %d, %Y %H:%M:%S") %></dd>
+
+        <% if @message.error_message.present? %>
+          <dt>Last error</dt>
+          <dd class="text-error"><%= @message.error_message %></dd>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Delivery attempts -->
+  <div class="card">
+    <div class="card__header"><h2>Delivery Attempts</h2></div>
+    <div class="card__body card__body--flush">
+      <% if @attempts.empty? %>
+        <p class="empty-state">No delivery attempts yet.</p>
+      <% else %>
+        <table class="table table--sm">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Time</th>
+              <th>Provider</th>
+              <th>Code</th>
+              <th>Outcome</th>
+              <th>Message</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @attempts.each do |attempt| %>
+              <tr>
+                <td><%= attempt.attempt_number %></td>
+                <td class="text-nowrap"><%= attempt.attempted_at.strftime("%m/%d %H:%M:%S") %></td>
+                <td><%= attempt.smtp_provider&.name || "—" %></td>
+                <td><%= attempt.smtp_response_code || "—" %></td>
+                <td><span class="outcome-badge outcome-badge--<%= attempt.outcome %>"><%= attempt.outcome&.gsub("_", " ") %></span></td>
+                <td class="text-muted text-sm"><%= attempt.smtp_response_msg&.truncate(80) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Email body preview -->
+<div class="card">
+  <div class="card__header"><h2>Email Preview</h2></div>
+  <div class="card__body card__body--flush">
+    <iframe
+      id="email-preview"
+      srcdoc="<%= CGI.escapeHTML(@message.body_html) %>"
+      sandbox="allow-same-origin"
+      class="email-iframe"
+      onload="this.style.height = this.contentDocument.body.scrollHeight + 'px'">
+    </iframe>
+  </div>
+</div>

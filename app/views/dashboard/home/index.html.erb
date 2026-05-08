@@ -1,0 +1,77 @@
+<div class="page-header">
+  <h1>Overview</h1>
+  <span class="page-subtitle">Email Gateway — <%= Time.current.strftime("%b %d, %Y") %></span>
+</div>
+
+<% if @provider_warning %>
+  <div class="alert-banner">
+    ⚠️ <strong>Provider Warning:</strong> The primary SMTP provider is experiencing high failure rates and no fallback is configured. Emails are being queued.
+  </div>
+<% end %>
+
+<!-- Stats grid -->
+<div class="stats-grid">
+  <div class="stat-card stat-card--pending">
+    <div class="stat-value"><%= @total_pending %></div>
+    <div class="stat-label">Pending</div>
+    <div class="stat-sub">in queue</div>
+  </div>
+  <div class="stat-card stat-card--sent">
+    <div class="stat-value"><%= @total_sent %></div>
+    <div class="stat-label">Delivered</div>
+    <div class="stat-sub"><%= @today_sent %> today</div>
+  </div>
+  <div class="stat-card stat-card--failed">
+    <div class="stat-value"><%= @total_failed %></div>
+    <div class="stat-label">Failed</div>
+    <div class="stat-sub"><%= @today_failed %> today</div>
+  </div>
+  <div class="stat-card stat-card--invalid">
+    <div class="stat-value"><%= @total_invalid %></div>
+    <div class="stat-label">Invalid</div>
+    <div class="stat-sub">rejected at ingestion</div>
+  </div>
+</div>
+
+<!-- Chart -->
+<div class="card">
+  <div class="card__header">
+    <h2>Emails — Last 14 Days</h2>
+  </div>
+  <div class="card__body">
+    <%= column_chart @emails_by_day, stacked: true, colors: ["#f59e0b", "#10b981", "#ef4444", "#6b7280"],
+        library: { scales: { y: { beginAtZero: true } } } %>
+  </div>
+</div>
+
+<!-- Recent messages -->
+<div class="card">
+  <div class="card__header">
+    <h2>Recent Messages</h2>
+    <%= link_to "View all →", dashboard_messages_path, class: "card__action" %>
+  </div>
+  <div class="card__body card__body--flush">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Client</th>
+          <th>To</th>
+          <th>Subject</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @recent_messages.each do |msg| %>
+          <tr>
+            <td class="text-muted"><%= msg.created_at.strftime("%m/%d %H:%M") %></td>
+            <td><span class="badge badge--client"><%= msg.api_client&.name || "—" %></span></td>
+            <td class="text-truncate"><%= Array(msg.to_addresses).first %></td>
+            <td class="text-truncate"><%= msg.subject %></td>
+            <td><span class="status-badge status-badge--<%= msg.status %>"><%= msg.status %></span></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
