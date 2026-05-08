@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hermes — Sign In</title>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+  <body class="login-body">
+    <div class="login-wrapper">
+      <div class="login-card">
+        <div class="login-brand">
+          <div class="brand-icon">✉</div>
+          <h1>Hermes</h1>
+          <p>Email Gateway</p>
+        </div>
+
+        <% if flash[:alert] %>
+          <div class="flash flash--alert"><%= flash[:alert] %></div>
+        <% end %>
+
+        <%= form_with url: login_path, method: :post, class: "login-form" do |f| %>
+          <div class="field">
+            <%= f.label :email, "Email" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "admin@hermes.farmacia.ufmg.br" %>
+          </div>
+          <div class="field">
+            <%= f.label :password, "Password" %>
+            <%= f.password_field :password, autocomplete: "current-password", placeholder: "••••••••" %>
+          </div>
+          <%= f.submit "Sign In", class: "btn btn--primary btn--full" %>
+        <% end %>
+      </div>
+    </div>
+  </body>
+</html>

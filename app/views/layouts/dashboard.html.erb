@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hermes — <%= content_for(:title) { "Dashboard" } %></title>
+    <meta name="description" content="Hermes Email Gateway Dashboard">
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <%= chartkick_js %>
+  </head>
+  <body class="dashboard-body">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar__brand">
+        <div class="brand-icon">✉</div>
+        <span>Hermes</span>
+      </div>
+      <nav class="sidebar__nav">
+        <%= link_to dashboard_root_path, class: "nav-item #{"active" if current_page?(dashboard_root_path)}" do %>
+          <span class="nav-icon">⌂</span> Overview
+        <% end %>
+        <%= link_to dashboard_messages_path, class: "nav-item #{"active" if request.path.start_with?("/dashboard/messages")}" do %>
+          <span class="nav-icon">✉</span> Messages
+        <% end %>
+        <%= link_to dashboard_clients_path, class: "nav-item #{"active" if request.path.start_with?("/dashboard/clients")}" do %>
+          <span class="nav-icon">🔑</span> API Clients
+        <% end %>
+        <%= link_to dashboard_providers_path, class: "nav-item #{"active" if request.path.start_with?("/dashboard/providers")}" do %>
+          <span class="nav-icon">📡</span> SMTP Providers
+        <% end %>
+        <%= link_to edit_dashboard_settings_path, class: "nav-item #{"active" if request.path.start_with?("/dashboard/settings")}" do %>
+          <span class="nav-icon">⚙</span> Settings
+        <% end %>
+      </nav>
+      <div class="sidebar__footer">
+        <%= link_to "Sign Out", logout_path, method: :delete, class: "nav-item nav-item--signout",
+              data: { turbo_method: :delete } %>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+      <% if flash[:notice] %>
+        <div class="flash flash--notice"><%= flash[:notice] %></div>
+      <% end %>
+      <% if flash[:alert] %>
+        <div class="flash flash--alert"><%= flash[:alert] %></div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+
+  </body>
+</html>

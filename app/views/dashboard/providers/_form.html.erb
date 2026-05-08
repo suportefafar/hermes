@@ -1,0 +1,61 @@
+<div class="page-header">
+  <%= link_to "← Providers", dashboard_providers_path, class: "back-link" %>
+  <h1><%= @provider.new_record? ? "New SMTP Provider" : "Edit #{@provider.name}" %></h1>
+</div>
+
+<div class="card card--form">
+  <div class="card__body">
+    <%= form_with model: [:dashboard, @provider], class: "form" do |f| %>
+      <% if @provider.errors.any? %>
+        <div class="form-errors">
+          <% @provider.errors.full_messages.each do |msg| %><p><%= msg %></p><% end %>
+        </div>
+      <% end %>
+
+      <div class="field-row">
+        <div class="field">
+          <%= f.label :name, "Provider Name" %>
+          <%= f.text_field :name, class: "input", placeholder: "e.g. SendGrid Primary" %>
+        </div>
+        <div class="field field--sm">
+          <%= f.label :priority, "Priority" %>
+          <%= f.number_field :priority, class: "input", min: 1, placeholder: "1" %>
+          <span class="field-hint">1 = primary</span>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <%= f.label :host, "SMTP Host" %>
+          <%= f.text_field :host, class: "input", placeholder: "smtp.sendgrid.net" %>
+        </div>
+        <div class="field field--sm">
+          <%= f.label :port, "Port" %>
+          <%= f.number_field :port, class: "input", placeholder: "587" %>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <%= f.label :username, "Username" %>
+          <%= f.text_field :username, class: "input", autocomplete: "off" %>
+        </div>
+        <div class="field">
+          <%= f.label :password, "Password / API Key" %>
+          <%= f.password_field :password, class: "input", autocomplete: "new-password",
+                placeholder: @provider.new_record? ? "" : "(leave blank to keep current)" %>
+        </div>
+      </div>
+
+      <div class="field">
+        <%= f.label :from_address, "Default From Address" %>
+        <%= f.email_field :from_address, class: "input", placeholder: "noreply@farmacia.ufmg.br" %>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit @provider.new_record? ? "Create Provider" : "Update Provider", class: "btn btn--primary" %>
+        <%= link_to "Cancel", dashboard_providers_path, class: "btn btn--ghost" %>
+      </div>
+    <% end %>
+  </div>
+</div>
