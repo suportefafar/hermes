@@ -4,7 +4,7 @@ module Dashboard
       @total_pending = EmailMessage.pending.count
       @total_sent    = EmailMessage.sent.count
       @total_failed  = EmailMessage.failed.count
-      @total_invalid = EmailMessage.invalid.count
+      @total_malformed = EmailMessage.malformed.count
 
       @today_sent    = EmailMessage.sent.where("updated_at >= ?", Time.current.beginning_of_day).count
       @today_failed  = EmailMessage.failed.where("updated_at >= ?", Time.current.beginning_of_day).count

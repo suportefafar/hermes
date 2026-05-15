@@ -5,12 +5,31 @@ default: &default
   url: <%= ENV["DATABASE_URL"] %>
 
 development:
-  <<: *default
-  database: hermes_development
+  primary:
+    <<: *default
+    database: hermes_development
+  cache:
+    <<: *default
+    database: hermes_development
+  queue:
+    <<: *default
+    database: hermes_development
 
 test:
-  <<: *default
-  database: hermes_test
+  primary:
+    <<: *default
+    database: hermes_test
+  cache:
+    <<: *default
+    database: hermes_test
+  queue:
+    <<: *default
+    database: hermes_test
 
 production:
-  <<: *default
+  primary:
+    <<: *default
+  cache:
+    <<: *default
+  queue:
+    <<: *default

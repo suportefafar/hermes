@@ -1,5 +1,5 @@
 <div class="page-header">
-  <%= link_to "← Providers", dashboard_providers_path, class: "back-link" %>
+  <%= link_to "← Providers", dashboard_smtp_providers_path, class: "back-link" %>
   <h1><%= @provider.new_record? ? "New SMTP Provider" : "Edit #{@provider.name}" %></h1>
 </div>
 
@@ -54,7 +54,7 @@
 
       <div class="form-actions">
         <%= f.submit @provider.new_record? ? "Create Provider" : "Update Provider", class: "btn btn--primary" %>
-        <%= link_to "Cancel", dashboard_providers_path, class: "btn btn--ghost" %>
+        <%= link_to "Cancel", dashboard_smtp_providers_path, class: "btn btn--ghost" %>
       </div>
     <% end %>
   </div>

@@ -15,7 +15,7 @@ module Dashboard
       @provider.failure_count = 0
 
       if @provider.save
-        redirect_to dashboard_providers_path, notice: "Provider created."
+        redirect_to dashboard_smtp_providers_path, notice: "Provider created."
       else
         render :new, status: :unprocessable_entity
       end
@@ -26,7 +26,7 @@ module Dashboard
 
     def update
       if @provider.update(provider_params)
-        redirect_to dashboard_providers_path, notice: "Provider updated."
+        redirect_to dashboard_smtp_providers_path, notice: "Provider updated."
       else
         render :edit, status: :unprocessable_entity
       end
@@ -34,12 +34,12 @@ module Dashboard
 
     def destroy
       @provider.destroy
-      redirect_to dashboard_providers_path, notice: "Provider deleted."
+      redirect_to dashboard_smtp_providers_path, notice: "Provider deleted."
     end
 
     def toggle_active
       @provider.update!(active: !@provider.active)
-      redirect_to dashboard_providers_path, notice: "Provider #{@provider.active? ? 'activated' : 'deactivated'}."
+      redirect_to dashboard_smtp_providers_path, notice: "Provider #{@provider.active? ? 'activated' : 'deactivated'}."
     end
 
     private

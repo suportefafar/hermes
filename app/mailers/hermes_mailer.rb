@@ -6,9 +6,13 @@ class HermesMailer < ApplicationMailer
       port:                 provider.port,
       user_name:            provider.username,
       password:             provider.password,
-      authentication:       :plain,
-      enable_starttls_auto: true
-    }
+      authentication:       :login,
+      enable_starttls_auto: provider.port != 465,
+      open_timeout:         10,
+      read_timeout:         10
+    }.compact
+
+    smtp_settings[:ssl] = true if provider.port == 465
 
     mail(
       to:          message.to_addresses,
@@ -17,7 +21,7 @@ class HermesMailer < ApplicationMailer
       from:        message.from_address.presence || provider.from_address,
       reply_to:    message.reply_to.presence,
       subject:     message.subject,
-      delivery_method_options: { smtp_settings: smtp_settings }
+      delivery_method_options: smtp_settings
     ) do |format|
       format.html { render plain: message.body_html, content_type: "text/html" }
     end

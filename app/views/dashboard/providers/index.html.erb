@@ -1,6 +1,6 @@
 <div class="page-header">
   <h1>SMTP Providers</h1>
-  <%= link_to "New Provider", new_dashboard_provider_path, class: "btn btn--primary" %>
+  <%= link_to "New Provider", new_dashboard_smtp_provider_path, class: "btn btn--primary" %>
 </div>
 
 <div class="card">
@@ -35,11 +35,11 @@
               <% end %>
             </td>
             <td class="text-right">
-              <%= link_to "Edit", edit_dashboard_provider_path(provider), class: "btn btn--xs btn--ghost" %>
+              <%= link_to "Edit", edit_dashboard_smtp_provider_path(provider), class: "btn btn--xs btn--ghost" %>
               <%= button_to provider.active? ? "Disable" : "Enable",
-                    toggle_active_dashboard_provider_path(provider), method: :patch,
+                    toggle_active_dashboard_smtp_provider_path(provider), method: :patch,
                     class: "btn btn--xs #{provider.active? ? "btn--danger" : "btn--secondary"}" %>
-              <%= button_to "Delete", dashboard_provider_path(provider), method: :delete,
+              <%= button_to "Delete", dashboard_smtp_provider_path(provider), method: :delete,
                     class: "btn btn--xs btn--danger",
                     data: { turbo_confirm: "Delete this provider? This cannot be undone." } %>
             </td>

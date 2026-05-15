@@ -69,7 +69,7 @@ A centralized, internal email dispatch service built with **Ruby on Rails**. All
 | `subject`        | string    |                                                    |
 | `body_html`      | text      | HTML content                                       |
 | `attachments`    | jsonb     | Array of `{filename, content_type, content_base64}`|
-| `status`         | enum      | `pending`, `sent`, `failed`, `invalid`             |
+| `status`         | enum      | `pending`, `sent`, `failed`, `malformed`           |
 | `attempts`       | integer   | Default 0                                          |
 | `next_attempt_at`| datetime  | When scheduler should next pick this up            |
 | `smtp_provider_id`| fk       | Which provider ultimately sent it (if sent)        |
@@ -179,12 +179,12 @@ Submit an email for delivery.
 | Code | Meaning                                                   |
 |------|-----------------------------------------------------------|
 | `202`| Accepted — job queued. Returns `{"id": "<message_uuid>"}` |
-| `400`| Validation error — also saved to DB as `status: invalid`, no retries |
+| `400`| Validation error — also saved to DB as `status: malformed`, no retries |
 | `401`| Missing or invalid token                                  |
 | `403`| HTTPS required (non-internal request over HTTP)           |
 | `422`| Unprocessable entity (malformed JSON)                     |
 
-> **Note:** On `400`, the message is persisted to `email_messages` with `status: invalid` so it appears in the dashboard for visibility, but `next_attempt_at` is null and `attempts` is locked.
+> **Note:** On `400`, the message is persisted to `email_messages` with `status: malformed` so it appears in the dashboard for visibility, but `next_attempt_at` is null and `attempts` is locked.
 
 ---
 
@@ -193,7 +193,7 @@ Submit an email for delivery.
 ### Stage 1 — Ingestion (API Controller)
 1. Authenticate token → `401` if invalid/revoked.
 2. Parse and validate request body.
-3. If **invalid**: persist with `status: invalid`, return `400`.
+3. If **invalid**: persist with `status: malformed`, return `400`.
 4. If **valid**: persist with `status: pending`, `next_attempt_at: now`, return `202`.
 
 ### Stage 2 — Scheduler (Recurring Background Job)
@@ -264,14 +264,14 @@ After 4th failure → `status: failed`. Message enters the dead letter view in t
 - Paginated list of all `email_messages`.
 - **Columns**: Timestamp, Client App, To, Subject, Status, Attempts.
 - **Search/filter**: by recipient, subject, client app name.
-- **Status filter**: All / Pending / Sent / Failed / Invalid.
+- **Status filter**: All / Pending / Sent / Failed / Malformed.
 - Click row → message detail view.
 
 #### `/dashboard/messages/:id` — Message Detail
 - Full header info (from, to, cc, bcc, reply-to, subject, client, timestamps).
 - **HTML body preview** (rendered in sandboxed iframe).
 - **Delivery attempts log** (table: attempt #, provider used, SMTP code, outcome, timestamp).
-- **"Resend" button** (for Failed / Invalid messages) — triggers manual resend.
+- **"Resend" button** (for Failed / Malformed messages) — triggers manual resend.
 
 #### `/dashboard/clients` — API Client Tokens
 - List all clients (name, token prefix, active status, created_at).

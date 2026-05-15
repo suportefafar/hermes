@@ -8,6 +8,5 @@ class AddRecipientsToEmailMessages < ActiveRecord::Migration[8.1]
     add_index :email_messages, :to_addresses, using: :gin
     add_index :email_messages, :status
     add_index :email_messages, :next_attempt_at
-    add_index :email_messages, :api_client_id
   end
 end

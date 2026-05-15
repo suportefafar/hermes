@@ -25,7 +25,7 @@ class DeliveryJob < ApplicationJob
       message.mark_sent!(provider)
       record_attempt(message, provider, 250, "OK", :delivered)
 
-    rescue Net::SMTP::AuthenticationError,
+    rescue Net::SMTPAuthenticationError,
            Net::SMTPFatalError => e
       # 5xx — hard bounce, no retry
       code = extract_code(e)
@@ -46,6 +46,7 @@ class DeliveryJob < ApplicationJob
 
     rescue => e
       # Unknown error — treat as soft bounce
+      provider.increment_failure! if provider
       message.schedule_retry!(e.message)
       record_attempt(message, provider, nil, e.message, :soft_bounce)
     end
@@ -66,6 +67,6 @@ class DeliveryJob < ApplicationJob
   end
 
   def extract_code(error)
-    error.message.match(/\A(\d{3})/)?.[](1)&.to_i
+    error.message.match(/\A(\d{3})/)&.[](1)&.to_i
   end
 end

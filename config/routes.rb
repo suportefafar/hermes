@@ -5,8 +5,7 @@ Rails.application.routes.draw do
   # Admin session
   get    "login",  to: "sessions#new",     as: :login
   post   "login",  to: "sessions#create"
-  delete "logout", to: "sessions#destroy", as: :logout
-
+  match  "logout", to: "sessions#destroy", via: %i[get delete], as: :logout
   # Dashboard
   namespace :dashboard do
     root to: "home#index"
@@ -19,7 +18,7 @@ Rails.application.routes.draw do
       member { patch :toggle_active }
     end
 
-    resources :providers, only: %i[index new create edit update destroy] do
+    resources :smtp_providers, path: "providers", controller: "providers" do
       member { patch :toggle_active }
     end
 
