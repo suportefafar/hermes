@@ -1,7 +1,7 @@
 class HermesMailer < ApplicationMailer
   # Dynamically configure SMTP per provider at send time
   def send_email(message, provider)
-    @body_html = message.body_html
+    @body_html = normalize_body_html(message.body_html)
     @subject   = message.subject
 
     smtp_settings = {
@@ -35,5 +35,22 @@ class HermesMailer < ApplicationMailer
       delivery_method_options: smtp_settings
     )
   end
-end
 
+  private
+
+  # Detects whether the body is plain text (no HTML block elements present)
+  # and if so converts it to basic HTML so formatting is preserved.
+  # HTML inputs are returned as-is.
+  HTML_BLOCK_TAGS = %r{<(p|div|table|ul|ol|li|h[1-6]|br|hr|pre|blockquote)[^>]*>}i
+
+  def normalize_body_html(body)
+    return body if body.match?(HTML_BLOCK_TAGS)
+
+    # Plain-text path: escape, then restore line breaks and basic Markdown-ish markers
+    safe = ERB::Util.html_escape(body)
+    safe = safe.gsub(/\*\*(.+?)\*\*/, '<strong>\1</strong>')  # **bold**
+    safe = safe.gsub(/\*(.+?)\*/,     '<em>\1</em>')          # *italic*
+    safe = safe.gsub("\n", "<br>\n")
+    safe
+  end
+end
