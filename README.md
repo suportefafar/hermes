@@ -20,9 +20,9 @@ Generate the token, and store it securely in your service's environment variable
 ### 2. The Endpoint
 
 ```http
-POST http://hermes:8009/api/v1/messages
+POST http://hermes:80/api/v1/messages
 ```
-*(If calling from inside the Docker network, use `http://hermes:8009`. If calling externally, use `https://hermes.farmacia.ufmg.br`)*
+*(If calling from inside the Docker network, use `http://hermes:80`. If calling externally, use `https://hermes.farmacia.ufmg.br`)*
 
 ### 3. Request Headers
 
@@ -57,7 +57,7 @@ POST http://hermes:8009/api/v1/messages
 
 ### cURL
 ```bash
-curl -X POST http://hermes:8009/api/v1/messages \
+curl -X POST http://hermes:80/api/v1/messages \
   -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -H "Content-Type: application/json" \
   -d '{
@@ -70,7 +70,7 @@ curl -X POST http://hermes:8009/api/v1/messages \
 ### Ruby (Rails / Faraday)
 ```ruby
 # In your Rails app, you don't need ActionMailer. Just a simple HTTP call.
-Faraday.post("http://hermes:8009/api/v1/messages") do |req|
+Faraday.post("http://hermes:80/api/v1/messages") do |req|
   req.headers['Authorization'] = "Bearer #{ENV['HERMES_API_TOKEN']}"
   req.headers['Content-Type'] = 'application/json'
   req.body = {
@@ -89,7 +89,7 @@ $payload = array(
     'body_html'    => '<p>Click here to reset...</p>'
 );
 
-$response = wp_remote_post( 'http://hermes:8009/api/v1/messages', array(
+$response = wp_remote_post( 'http://hermes:80/api/v1/messages', array(
     'headers'     => array(
         'Authorization' => 'Bearer ' . HERMES_API_TOKEN,
         'Content-Type'  => 'application/json; charset=utf-8'
@@ -101,7 +101,7 @@ $response = wp_remote_post( 'http://hermes:8009/api/v1/messages', array(
 
 ### Node.js (Fetch)
 ```javascript
-await fetch("http://hermes:8009/api/v1/messages", {
+await fetch("http://hermes:80/api/v1/messages", {
   method: "POST",
   headers: {
     "Authorization": `Bearer ${process.env.HERMES_API_TOKEN}`,
@@ -121,7 +121,7 @@ import requests
 import os
 
 requests.post(
-    "http://hermes:8009/api/v1/messages",
+    "http://hermes:80/api/v1/messages",
     headers={"Authorization": f"Bearer {os.getenv('HERMES_API_TOKEN')}"},
     json={
         "to_addresses": ["user@example.com"],
