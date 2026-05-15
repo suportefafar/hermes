@@ -7,7 +7,7 @@ class EmailMessage < ApplicationRecord
     pending:    0,
     sent:       1,
     failed:     2,
-    invalid:    3
+    malformed:  3
   }
 
   RETRY_DELAYS = [

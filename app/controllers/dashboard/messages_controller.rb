@@ -30,12 +30,12 @@ module Dashboard
       @message = EmailMessage.find(params[:id])
 
       if @message.pending?
-        redirect_to dashboard_message_path(@message), alert: "Message is already pending."
+        redirect_back fallback_location: dashboard_message_path(@message), alert: "Message is already pending."
         return
       end
 
       @message.enqueue_manual_resend!
-      redirect_to dashboard_message_path(@message), notice: "Message queued for resend."
+      redirect_back fallback_location: dashboard_message_path(@message), notice: "Message queued for resend."
     end
   end
 end

@@ -11,7 +11,7 @@ module Api
           # Persist as invalid for visibility in dashboard
           EmailMessage.create!(
             api_client:   @current_client,
-            status:       :invalid,
+            status:       :malformed,
             from_address: message_params[:from_address],
             reply_to:     message_params[:reply_to],
             to_addresses: Array(message_params[:to_addresses]),

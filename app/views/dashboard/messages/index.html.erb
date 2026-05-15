@@ -39,7 +39,15 @@
             <td class="text-truncate"><%= msg.subject %></td>
             <td class="text-center"><%= msg.attempts %></td>
             <td><span class="status-badge status-badge--<%= msg.status %>"><%= msg.status %></span></td>
-            <td><%= link_to "View", dashboard_message_path(msg), class: "btn btn--xs btn--ghost" %></td>
+            <td class="text-right">
+              <div class="table-actions">
+                <%= link_to "View", dashboard_message_path(msg), class: "btn btn--xs btn--ghost" %>
+                <%= button_to "Re-send", resend_dashboard_message_path(msg), method: :post,
+                      class: "btn btn--xs btn--secondary",
+                      disabled: msg.pending?,
+                      data: { turbo_confirm: "Queue this message for resend?" } %>
+              </div>
+            </td>
           </tr>
         <% end %>
       </tbody>
