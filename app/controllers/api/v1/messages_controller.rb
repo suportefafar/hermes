@@ -14,9 +14,9 @@ module Api
             status:       :malformed,
             from_address: message_params[:from_address],
             reply_to:     message_params[:reply_to],
-            to_addresses: Array(message_params[:to_addresses]),
-            cc_addresses: Array(message_params[:cc_addresses]),
-            bcc_addresses: Array(message_params[:bcc_addresses]),
+            to_addresses:  normalize_addresses(message_params[:to_addresses]),
+            cc_addresses:  normalize_addresses(message_params[:cc_addresses]),
+            bcc_addresses: normalize_addresses(message_params[:bcc_addresses]),
             subject:      message_params[:subject],
             body_html:    message_params[:body_html],
             attachments:  message_params[:attachments] || [],
@@ -32,9 +32,9 @@ module Api
           status:        :pending,
           from_address:  message_params[:from_address],
           reply_to:      message_params[:reply_to],
-          to_addresses:  Array(message_params[:to_addresses]),
-          cc_addresses:  Array(message_params[:cc_addresses]),
-          bcc_addresses: Array(message_params[:bcc_addresses]),
+          to_addresses:  normalize_addresses(message_params[:to_addresses]),
+          cc_addresses:  normalize_addresses(message_params[:cc_addresses]),
+          bcc_addresses: normalize_addresses(message_params[:bcc_addresses]),
           subject:       message_params[:subject],
           body_html:     message_params[:body_html],
           attachments:   message_params[:attachments] || [],
@@ -78,9 +78,23 @@ module Api
       def message_params
         params.permit(
           :from_address, :reply_to, :subject, :body_html,
+          :to_addresses, :cc_addresses, :bcc_addresses,
           to_addresses: [], cc_addresses: [], bcc_addresses: [],
           attachments: [ :filename, :content_type, :content ]
         )
+      end
+
+      # Accepts a String ("a@x.com,b@x.com"), an Array, or nil.
+      # Always returns a plain Array of trimmed, non-blank addresses.
+      def normalize_addresses(value)
+        case value
+        when Array
+          value.flat_map { |v| v.to_s.split(",") }.map(&:strip).reject(&:blank?)
+        when String
+          value.split(",").map(&:strip).reject(&:blank?)
+        else
+          []
+        end
       end
     end
   end
