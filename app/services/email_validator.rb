@@ -18,7 +18,7 @@ class EmailValidator
       value = params[field]
       next if value.blank? && !required
 
-      addresses = value.is_a?(Array) ? value : [ value ]
+      addresses = normalize_addresses(value)
       addresses.each do |addr|
         unless valid_email?(addr)
           errors << "#{field} contains invalid address: #{addr}"
@@ -31,5 +31,18 @@ class EmailValidator
 
   def self.valid_email?(addr)
     addr.match?(URI::MailTo::EMAIL_REGEXP)
+  end
+
+  # Accepts a String ("a@x.com,b@x.com"), an Array, or nil.
+  # Always returns a plain Array of trimmed, non-blank addresses.
+  def self.normalize_addresses(value)
+    case value
+    when Array
+      value.flat_map { |v| v.to_s.split(",") }.map(&:strip).reject(&:blank?)
+    when String
+      value.split(",").map(&:strip).reject(&:blank?)
+    else
+      []
+    end
   end
 end
