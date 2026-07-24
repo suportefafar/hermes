@@ -42,15 +42,34 @@ class HermesMailer < ApplicationMailer
   # and if so converts it to basic HTML so formatting is preserved.
   # HTML inputs are returned as-is.
   HTML_BLOCK_TAGS = %r{<(p|div|table|ul|ol|li|h[1-6]|br|hr|pre|blockquote)[^>]*>}i
+  URL_REGEX       = %r{https?://[^\s<]+}i
 
   def normalize_body_html(body)
-    return body if body.match?(HTML_BLOCK_TAGS)
+    return body if body.blank? || body.match?(HTML_BLOCK_TAGS)
+
+    # Extract URLs into placeholders so ERB::Util.html_escape won't escape query parameter & into &amp;
+    # without wrapping in proper HTML <a href="..."> tags.
+    urls = []
+    text_with_placeholders = body.gsub(URL_REGEX) do |url|
+      cleaned_url = url.sub(/[.,;:?!)]+$/, '')
+      trailing_punct = url[cleaned_url.length..] || ''
+      urls << cleaned_url
+      "__HERMES_URL_PLACEHOLDER_#{urls.size - 1}__#{trailing_punct}"
+    end
 
     # Plain-text path: escape, then restore line breaks and basic Markdown-ish markers
-    safe = ERB::Util.html_escape(body)
+    safe = ERB::Util.html_escape(text_with_placeholders)
     safe = safe.gsub(/\*\*(.+?)\*\*/, '<strong>\1</strong>')  # **bold**
     safe = safe.gsub(/\*(.+?)\*/,     '<em>\1</em>')          # *italic*
     safe = safe.gsub("\n", "<br>\n")
+
+    # Replace placeholders with HTML <a> tags so mail clients render clickable links with valid href
+    urls.each_with_index do |url, index|
+      escaped_url = ERB::Util.html_escape(url)
+      link_tag = "<a href=\"#{escaped_url}\" style=\"color: #0066cc; text-decoration: underline;\">#{escaped_url}</a>"
+      safe = safe.gsub("__HERMES_URL_PLACEHOLDER_#{index}__", link_tag)
+    end
+
     safe
   end
 end
