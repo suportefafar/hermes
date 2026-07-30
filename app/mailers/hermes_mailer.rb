@@ -51,8 +51,8 @@ class HermesMailer < ApplicationMailer
     # without wrapping in proper HTML <a href="..."> tags.
     urls = []
     text_with_placeholders = body.gsub(URL_REGEX) do |url|
-      cleaned_url = url.sub(/[.,;:?!)]+$/, '')
-      trailing_punct = url[cleaned_url.length..] || ''
+      cleaned_url = url.sub(/[.,;:?!)]+$/, "")
+      trailing_punct = url[cleaned_url.length..] || ""
       urls << cleaned_url
       "__HERMES_URL_PLACEHOLDER_#{urls.size - 1}__#{trailing_punct}"
     end
