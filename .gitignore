@@ -36,3 +36,8 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+# Deployment: local runtime configuration
+.env
+.env.*
+!/.env.example
