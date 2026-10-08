@@ -45,3 +45,14 @@
 # Ignore Docker-related files
 /.dockerignore
 /Dockerfile*
+
+# Olympus: exclude local configuration and credentials
+.env
+.env.*
+**/.env
+**/.env.*
+.git
+**/.git
+**/*.key
+**/*.pem
+**/*.p12
