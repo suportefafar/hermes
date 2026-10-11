@@ -1,22 +1,22 @@
 <div class="page-header">
   <div>
     <%= link_to "← Messages", dashboard_messages_path, class: "back-link" %>
-    <h1 class="text-truncate"><%= @message.subject %></h1>
+    <h1 class="ffds-h3 ffds-text-truncate"><%= @message.subject %></h1>
   </div>
   <% unless @message.pending? %>
     <%= button_to "Resend", resend_dashboard_message_path(@message), method: :post,
-          class: "btn btn--primary", data: { turbo_confirm: "Queue this message for resend?" } %>
+          class: "ffds-btn ffds-btn-primary", data: { turbo_confirm: "Queue this message for resend?" } %>
   <% end %>
 </div>
 
 <!-- Meta info -->
 <div class="detail-grid">
-  <div class="card">
-    <div class="card__header"><h2>Headers</h2></div>
-    <div class="card__body">
+  <div class="ffds-card hermes-card">
+    <div class="ffds-card-header"><h2 class="ffds-h5">Headers</h2></div>
+    <div class="ffds-card-body">
       <dl class="dl">
         <dt>Status</dt>
-        <dd><span class="status-badge status-badge--<%= @message.status %>"><%= @message.status %></span></dd>
+        <dd><span class="ffds-badge status-badge status-badge--<%= @message.status %>"><%= @message.status %></span></dd>
 
         <dt>From</dt>
         <dd><%= @message.from_address.presence || "(provider default)" %></dd>
@@ -51,16 +51,16 @@
 
         <% if @message.error_message.present? %>
           <dt>Last error</dt>
-          <dd class="text-error"><%= @message.error_message %></dd>
+          <dd class="ffds-text-danger"><%= @message.error_message %></dd>
         <% end %>
       </dl>
     </div>
   </div>
 
   <!-- Delivery attempts -->
-  <div class="card">
-    <div class="card__header"><h2>Delivery Attempts</h2></div>
-    <div class="card__body card__body--flush">
+  <div class="ffds-card hermes-card">
+    <div class="ffds-card-header"><h2 class="ffds-h5">Delivery Attempts</h2></div>
+    <div class="ffds-card-body hermes-card-body--flush">
       <% if @attempts.empty? %>
         <p class="empty-state">No delivery attempts yet.</p>
       <% else %>
@@ -82,8 +82,8 @@
                 <td class="text-nowrap"><%= attempt.attempted_at.strftime("%m/%d %H:%M:%S") %></td>
                 <td><%= attempt.smtp_provider&.name || "—" %></td>
                 <td><%= attempt.smtp_response_code || "—" %></td>
-                <td><span class="outcome-badge outcome-badge--<%= attempt.outcome %>"><%= attempt.outcome&.gsub("_", " ") %></span></td>
-                <td class="text-muted text-sm"><%= attempt.smtp_response_msg&.truncate(80) %></td>
+                <td><span class="ffds-badge outcome-badge outcome-badge--<%= attempt.outcome %>"><%= attempt.outcome&.gsub("_", " ") %></span></td>
+                <td class="ffds-text-muted ffds-small"><%= attempt.smtp_response_msg&.truncate(80) %></td>
               </tr>
             <% end %>
           </tbody>
@@ -94,9 +94,9 @@
 </div>
 
 <!-- Email body preview -->
-<div class="card">
-  <div class="card__header"><h2>Email Preview</h2></div>
-  <div class="card__body card__body--flush">
+<div class="ffds-card hermes-card">
+  <div class="ffds-card-header"><h2 class="ffds-h5">Email Preview</h2></div>
+  <div class="ffds-card-body hermes-card-body--flush">
     <iframe
       id="email-preview"
       srcdoc="<%= CGI.escapeHTML(@message.body_html) %>"

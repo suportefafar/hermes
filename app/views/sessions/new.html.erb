@@ -3,35 +3,44 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a1a1a">
     <title>Hermes — Sign In</title>
+    <%= favicon_link_tag 'logo.ico', type: 'image/x-icon' %>
+    <%= render "layouts/design_system" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-  <body class="login-body">
-    <div class="login-wrapper">
-      <div class="login-card">
-        <div class="login-brand">
-          <div class="brand-icon">✉</div>
-          <h1>Hermes</h1>
-          <p>Email Gateway</p>
+  <body class="ffds-root hermes-root login-body">
+    <main class="login-wrapper">
+      <section class="ffds-card login-card">
+        <div class="ffds-card-body">
+          <header class="login-brand">
+            <%= image_tag "logo.png", alt: "", class: "brand-icon" %>
+            <p class="eyebrow">EMAIL GATEWAY</p>
+            <h1>Hermes</h1>
+            <p>Sign in to manage delivery and mail services.</p>
+          </header>
+
+          <% if flash[:alert] %>
+            <div class="ffds-alert ffds-alert-danger"><%= flash[:alert] %></div>
+          <% end %>
+
+          <%= form_with url: login_path, method: :post, class: "login-form" do |f| %>
+            <div class="field">
+              <%= f.label :email, "Email", class: "ffds-form-label" %>
+              <%= f.email_field :email, autofocus: true, autocomplete: "email",
+                    placeholder: "admin@hermes.farmacia.ufmg.br", class: "ffds-form-control" %>
+            </div>
+            <div class="field">
+              <%= f.label :password, "Password", class: "ffds-form-label" %>
+              <%= f.password_field :password, autocomplete: "current-password",
+                    placeholder: "••••••••", class: "ffds-form-control" %>
+            </div>
+            <%= f.submit "Sign In", class: "ffds-btn ffds-btn-lg ffds-btn-primary hermes-full-width" %>
+          <% end %>
         </div>
-
-        <% if flash[:alert] %>
-          <div class="flash flash--alert"><%= flash[:alert] %></div>
-        <% end %>
-
-        <%= form_with url: login_path, method: :post, class: "login-form" do |f| %>
-          <div class="field">
-            <%= f.label :email, "Email" %>
-            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "admin@hermes.farmacia.ufmg.br" %>
-          </div>
-          <div class="field">
-            <%= f.label :password, "Password" %>
-            <%= f.password_field :password, autocomplete: "current-password", placeholder: "••••••••" %>
-          </div>
-          <%= f.submit "Sign In", class: "btn btn--primary btn--full" %>
-        <% end %>
-      </div>
-    </div>
+      </section>
+      <p class="login-footnote">Farmácia UFMG <span>·</span> Mail operations</p>
+    </main>
   </body>
 </html>

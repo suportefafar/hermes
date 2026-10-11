@@ -1,0 +1,17 @@
+<% design_system_host = Rails.env.production? ? "https://design-system.farmacia.ufmg.br" : "#{request.protocol}design-system.farmacia.local" %>
+<link id="farmacia-design-system-css" rel="stylesheet" href="<%= design_system_host %>/dist/latest/farmacia-ds.min.css" data-turbo-track="reload">
+<script id="farmacia-design-system-js" src="<%= design_system_host %>/dist/latest/farmacia-ds.min.js" defer data-turbo-track="reload"></script>
+<% unless Rails.env.production? %>
+  <script>
+    (() => {
+      const fallback = "https://design-system.farmacia.ufmg.br/dist/latest/";
+      const stylesheet = document.getElementById("farmacia-design-system-css");
+      const script = document.getElementById("farmacia-design-system-js");
+      stylesheet.addEventListener("error", () => { stylesheet.href = `${fallback}farmacia-ds.min.css`; }, { once: true });
+      script.addEventListener("error", () => { script.src = `${fallback}farmacia-ds.min.js`; }, { once: true });
+    })();
+  </script>
+<% end %>
+<script>
+  document.addEventListener("turbo:load", () => window.FFDS && window.FFDS.createIcons());
+</script>

@@ -7,56 +7,60 @@
     <meta name="description" content="Hermes Email Gateway Dashboard">
     <%= favicon_link_tag 'logo.ico', type: 'image/x-icon' %>
     <%= favicon_link_tag 'logo.png', rel: 'apple-touch-icon', type: 'image/png' %>
-    <link rel="stylesheet" href="https://design-system.farmacia.ufmg.br/dist/latest/farmacia-ds.min.css" data-turbo-track="reload">
+    <%= render "layouts/design_system" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <script src="https://design-system.farmacia.ufmg.br/dist/latest/farmacia-ds.min.js" defer data-turbo-track="reload"></script>
   </head>
-  <body class="ffds-root">
-    <div class="dashboard-body">
-
-      <!-- Sidebar -->
-      <aside class="sidebar">
-        <div class="sidebar__brand">
-          <%= image_tag "logo.png", alt: "Hermes Logo", class: "brand-icon" %>
-          <span>Hermes</span>
-        </div>
-        <nav class="sidebar__nav">
-          <%= link_to dashboard_root_path, class: "nav-item #{"active" if current_page?(dashboard_root_path)}" do %>
-            <i data-lucide="home"></i> <span>Overview</span>
-          <% end %>
-          <%= link_to dashboard_messages_path, class: "nav-item #{"active" if request.path.start_with?("/dashboard/messages")}" do %>
-            <i data-lucide="mail"></i> <span>Messages</span>
-          <% end %>
-          <%= link_to dashboard_clients_path, class: "nav-item #{"active" if request.path.start_with?("/dashboard/clients")}" do %>
-            <i data-lucide="key"></i> <span>API Clients</span>
-          <% end %>
-          <%= link_to dashboard_smtp_providers_path, class: "nav-item #{"active" if request.path.start_with?("/dashboard/providers")}" do %>
-            <i data-lucide="radio"></i> <span>SMTP Providers</span>
-          <% end %>
-          <%= link_to edit_dashboard_settings_path, class: "nav-item #{"active" if request.path.start_with?("/dashboard/settings")}" do %>
-            <i data-lucide="settings"></i> <span>Settings</span>
-          <% end %>
-        </nav>
-        <div class="sidebar__footer">
-          <%= link_to logout_path, method: :delete, class: "nav-item nav-item--signout",
-                data: { turbo_method: :delete } do %>
-            <i data-lucide="log-out"></i> <span>Sign Out</span>
-          <% end %>
-        </div>
-      </aside>
-
-      <!-- Main content -->
-      <main class="main-content">
-        <% if flash[:notice] %>
-          <div class="flash flash--notice"><%= flash[:notice] %></div>
+  <body class="ffds-root hermes-root">
+    <div class="ffds-app-container hermes-app">
+      <header class="hermes-topbar">
+        <%= link_to dashboard_root_path, class: "ffds-navbar-brand hermes-brand" do %>
+          <%= image_tag "logo.png", alt: "", class: "brand-icon" %><span>Hermes</span>
         <% end %>
-        <% if flash[:alert] %>
-          <div class="flash flash--alert"><%= flash[:alert] %></div>
-        <% end %>
-
-        <%= yield %>
-      </main>
-    </div> <!-- /dashboard-body -->
+        <span class="hermes-topbar-caption">Email Gateway</span>
+      </header>
+      <div class="ffds-app-main hermes-app-main">
+        <aside class="ffds-sidebar hermes-sidebar">
+          <div class="sidebar__brand">
+            <span class="eyebrow">WORKSPACE</span>
+            <strong>Mail operations</strong>
+          </div>
+          <nav class="ffds-sidebar-nav hermes-sidebar-nav" aria-label="Main navigation">
+            <%= link_to dashboard_root_path, class: "ffds-sidebar-link #{"ffds-active" if current_page?(dashboard_root_path)}" do %>
+              <i data-lucide="layout-dashboard"></i><span>Overview</span>
+            <% end %>
+            <%= link_to dashboard_messages_path, class: "ffds-sidebar-link #{"ffds-active" if request.path.start_with?("/dashboard/messages")}" do %>
+              <i data-lucide="mail"></i><span>Messages</span>
+            <% end %>
+            <%= link_to dashboard_clients_path, class: "ffds-sidebar-link #{"ffds-active" if request.path.start_with?("/dashboard/clients")}" do %>
+              <i data-lucide="key-round"></i><span>API Clients</span>
+            <% end %>
+            <%= link_to dashboard_smtp_providers_path, class: "ffds-sidebar-link #{"ffds-active" if request.path.start_with?("/dashboard/providers")}" do %>
+              <i data-lucide="server"></i><span>SMTP Providers</span>
+            <% end %>
+            <%= link_to edit_dashboard_settings_path, class: "ffds-sidebar-link #{"ffds-active" if request.path.start_with?("/dashboard/settings")}" do %>
+              <i data-lucide="settings-2"></i><span>Settings</span>
+            <% end %>
+          </nav>
+          <div class="sidebar__footer">
+            <%= link_to logout_path, method: :delete, class: "ffds-sidebar-link hermes-signout",
+                  data: { turbo_method: :delete } do %>
+              <i data-lucide="log-out"></i><span>Sign Out</span>
+            <% end %>
+          </div>
+        </aside>
+        <main class="ffds-content-area hermes-content">
+          <div class="hermes-page">
+            <% if flash[:notice] %>
+              <div class="ffds-alert ffds-alert-success"><%= flash[:notice] %></div>
+            <% end %>
+            <% if flash[:alert] %>
+              <div class="ffds-alert ffds-alert-danger"><%= flash[:alert] %></div>
+            <% end %>
+            <%= yield %>
+          </div>
+        </main>
+      </div>
+    </div>
   </body>
 </html>

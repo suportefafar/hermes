@@ -18,10 +18,9 @@
     <%= favicon_link_tag 'logo.png', rel: 'apple-touch-icon', type: 'image/png' %>
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <link rel="stylesheet" href="https://design-system.farmacia.ufmg.br/dist/latest/farmacia-ds.min.css" data-turbo-track="reload">
+    <%= render "layouts/design_system" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <script src="https://design-system.farmacia.ufmg.br/dist/latest/farmacia-ds.min.js" defer data-turbo-track="reload"></script>
   </head>
 
   <body class="ffds-root">
