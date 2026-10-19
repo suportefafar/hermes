@@ -529,10 +529,7 @@ body {
 }
 
 .login-body {
-  display: grid;
   min-height: 100vh;
-  place-items: center;
-  padding: var(--space-6);
   background:
     radial-gradient(ellipse at 15% 15%, var(--color-primary-10), transparent 30rem),
     radial-gradient(ellipse at 90% 85%, var(--color-info-bg), transparent 32rem),
@@ -540,7 +537,14 @@ body {
 }
 
 .login-wrapper {
-  width: min(100%, 460px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  width: min(460px, calc(100% - 2 * var(--space-6)));
+  min-height: 100vh;
+  margin-inline: auto;
+  padding-block: var(--space-6);
 }
 
 .login-card {
