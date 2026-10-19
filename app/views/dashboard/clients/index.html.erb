@@ -28,11 +28,16 @@
               <% end %>
             </td>
             <td class="ffds-text-muted"><%= client.created_at.strftime("%b %d, %Y") %></td>
-            <td>
-              <%= button_to client.active? ? "Revoke" : "Activate",
-                    toggle_active_dashboard_client_path(client), method: :patch,
-                    class: "ffds-btn ffds-btn-sm #{client.active? ? "ffds-btn-danger" : "ffds-btn-secondary"}",
-                    data: { turbo_confirm: "Are you sure?" } %>
+            <td class="ffds-text-right">
+              <div class="table-actions">
+                <%= button_to client.active? ? "Revoke" : "Activate",
+                      toggle_active_dashboard_client_path(client), method: :patch,
+                      class: "ffds-btn ffds-btn-sm #{client.active? ? "ffds-btn-danger" : "ffds-btn-secondary"}",
+                      data: { turbo_confirm: "Are you sure?" } %>
+                <%= button_to "Delete", dashboard_client_path(client), method: :delete,
+                      class: "ffds-btn ffds-btn-sm ffds-btn-danger",
+                      data: { turbo_confirm: "Permanently delete #{client.name}? Its API token will stop working. Existing messages will stay in history." } %>
+              </div>
             </td>
           </tr>
         <% end %>

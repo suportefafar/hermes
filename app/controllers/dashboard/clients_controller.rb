@@ -1,6 +1,6 @@
 module Dashboard
   class ClientsController < BaseController
-    before_action :set_client, only: %i[show toggle_active]
+    before_action :set_client, only: %i[show toggle_active destroy]
 
     def index
       @clients = ApiClient.order(:name)
@@ -30,6 +30,11 @@ module Dashboard
     def toggle_active
       @client.update!(active: !@client.active)
       redirect_to dashboard_clients_path, notice: "Client #{@client.active? ? 'activated' : 'revoked'}."
+    end
+
+    def destroy
+      @client.destroy!
+      redirect_to dashboard_clients_path, notice: "Client deleted. Existing messages were kept."
     end
 
     private

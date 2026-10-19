@@ -14,7 +14,7 @@ Rails.application.routes.draw do
       member { post :resend }
     end
 
-    resources :clients, only: %i[index new create show] do
+    resources :clients, only: %i[index new create show destroy] do
       member { patch :toggle_active }
     end
 
