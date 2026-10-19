@@ -17,6 +17,10 @@ All services must communicate with Hermes via the REST API.
 Before a service can send emails, an administrator must create an API Client in the [Hermes Dashboard](/dashboard/clients). 
 Generate the token, and store it securely in your service's environment variables.
 
+## Production configuration
+
+Configure private runtime environment variables before deployment.
+
 ### 2. The Endpoint
 
 ```http

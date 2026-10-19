@@ -29,7 +29,22 @@ test:
 production:
   primary:
     <<: *default
+    database: hermes_production
+    host: <%= ENV.fetch("POSTGRES_HOST", "postgres-db") %>
+    port: <%= ENV.fetch("POSTGRES_PORT", 5432) %>
+    username: <%= ENV.fetch("POSTGRES_USER") %>
+    password: <%= ENV.fetch("POSTGRES_PASSWORD") %>
   cache:
     <<: *default
+    database: hermes_production
+    host: <%= ENV.fetch("POSTGRES_HOST", "postgres-db") %>
+    port: <%= ENV.fetch("POSTGRES_PORT", 5432) %>
+    username: <%= ENV.fetch("POSTGRES_USER") %>
+    password: <%= ENV.fetch("POSTGRES_PASSWORD") %>
   queue:
     <<: *default
+    database: hermes_production
+    host: <%= ENV.fetch("POSTGRES_HOST", "postgres-db") %>
+    port: <%= ENV.fetch("POSTGRES_PORT", 5432) %>
+    username: <%= ENV.fetch("POSTGRES_USER") %>
+    password: <%= ENV.fetch("POSTGRES_PASSWORD") %>
