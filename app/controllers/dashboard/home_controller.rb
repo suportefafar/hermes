@@ -11,12 +11,14 @@ module Dashboard
 
       @recent_messages = EmailMessage.order(created_at: :desc).limit(20).includes(:api_client)
 
-      # Chart data: emails per day (last 14 days)
-      @emails_by_day = EmailMessage
-        .where("created_at > ?", 14.days.ago)
-        .group_by_day(:created_at)
-        .group(:status)
-        .count
+      # Chart data: one point per hour, including the current hour
+      chart_end = Time.current
+      chart_start = chart_end.beginning_of_hour - 47.hours
+      chart_range = chart_start..chart_end
+      @emails_by_hour = [
+        { name: "Sent", data: EmailMessage.sent.group_by_hour(:updated_at, range: chart_range, series: true).count },
+        { name: "Failed", data: EmailMessage.failed.group_by_hour(:updated_at, range: chart_range, series: true).count }
+      ]
 
       # Warning: primary provider degraded and no fallback
       primary = SmtpProvider.active.first

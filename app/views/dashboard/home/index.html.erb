@@ -36,11 +36,12 @@
 <!-- Chart -->
 <div class="ffds-card hermes-card">
   <div class="ffds-card-header">
-    <h2 class="ffds-h5">Emails — Last 14 Days</h2>
+    <h2 class="ffds-h5">Emails — Last 48 Hours</h2>
   </div>
   <div class="ffds-card-body">
-    <%= column_chart @emails_by_day, stacked: true, colors: ["#f59e0b", "#10b981", "#ef4444", "#6b7280"],
-        library: { scales: { y: { beginAtZero: true } } } %>
+    <%= line_chart @emails_by_hour, colors: ["#10b981", "#ef4444"], points: true, curve: false,
+        min: 0, legend: "bottom", xtitle: "Hour", ytitle: "Emails",
+        library: { scales: { x: { ticks: { maxTicksLimit: 12 } }, y: { ticks: { precision: 0 } } } } %>
   </div>
 </div>
 
