@@ -17,6 +17,12 @@ All services must communicate with Hermes via the REST API.
 Before a service can send emails, an administrator must create an API Client in the [Hermes Dashboard](/dashboard/clients). 
 Generate the token, and store it securely in your service's environment variables.
 
+## Production on Olympus
+
+Hermes is deployed at `https://hermes.farmacia.ufmg.br` by `olymctl prod --remote up hermes`. Before the first start, provision the private `hermes/.env` from `.env.production.example` with `RAILS_MASTER_KEY`, `SECRET_KEY_BASE`, the initial administrator credentials, and three independent Active Record encryption keys. Keep this file out of Git and set mode `600`. Production connects to the shared PostgreSQL service and stores SMTP provider credentials encrypted in the Hermes database.
+
+After deployment, sign in at `/dashboard`, add the production SMTP provider with its host, port, authentication, password, and default sender, and send a delivery test. Create a separate API client for each application in `/dashboard/clients`; Hermes displays each token once. Store each token in that application's private environment file. Athenas uses `HERMES_API_TOKEN` and can be deployed before that token exists, but email delivery will not work until the token is added. Do not share tokens between apps.
+
 ### 2. The Endpoint
 
 ```http
