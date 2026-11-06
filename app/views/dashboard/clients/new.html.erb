@@ -5,7 +5,7 @@
 
 <div class="ffds-card hermes-card hermes-form-card">
   <div class="ffds-card-body">
-    <%= form_with model: @client, url: dashboard_clients_path, class: "form" do |f| %>
+    <%= form_with model: @client, url: dashboard_clients_path, class: "form", data: { turbo: false } do |f| %>
       <% if @client.errors.any? %>
         <div class="ffds-alert ffds-alert-danger form-errors">
           <% @client.errors.full_messages.each do |msg| %>
