@@ -25,11 +25,14 @@ class HermesMailer < ApplicationMailer
       }
     end
 
+    sender = Mail::Address.new(message.from_address.presence || provider.from_address)
+    sender.display_name = message.from_name if message.from_name.present?
+
     mail(
       to:          message.to_addresses,
       cc:          message.cc_addresses.presence,
       bcc:         message.bcc_addresses.presence,
-      from:        message.from_address.presence || provider.from_address,
+      from:        sender.format,
       reply_to:    message.reply_to.presence,
       subject:     message.subject,
       delivery_method_options: smtp_settings

@@ -10,6 +10,10 @@ class EmailValidator
       end
     end
 
+    if params["from_name"].present? && (params["from_name"].to_s.length > 255 || params["from_name"].to_s.match?(/[\r\n]/))
+      errors << "from_name is invalid"
+    end
+
     # Validate email addresses
     address_fields = { "to_addresses" => true, "cc_addresses" => false, "bcc_addresses" => false,
                        "from_address" => false, "reply_to" => false }

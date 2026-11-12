@@ -42,6 +42,7 @@ POST http://hermes:80/api/v1/messages
 | `to_addresses` | `Array` or `String` | **Yes** | One or more recipient email addresses. |
 | `subject` | `String` | **Yes** | The subject of the email. |
 | `body_html` | `String` | **Yes** | The full HTML body of the email. |
+| `from_name` | `String` | No | Display name for the sender; keeps the provider address when `from_address` is omitted. Maximum 255 characters, without line breaks. |
 | `from_address` | `String` | No | Overrides the default provider sender address. |
 | `reply_to` | `String` | No | Sets a Reply-To header. |
 | `cc_addresses` | `Array` or `String` | No | Carbon copy recipients. |

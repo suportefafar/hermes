@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_19_185200) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_11_180000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -177,6 +177,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_19_185200) do
   end
 
   create_table "email_messages", force: :cascade do |t|
+    t.string "from_name", limit: 255
     t.bigint "api_client_id"
     t.jsonb "attachments", default: []
     t.integer "attempts"

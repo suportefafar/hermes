@@ -17,6 +17,7 @@ class EmailMessage < ApplicationRecord
     24.hours
   ].freeze
 
+  validates :from_name, length: { maximum: 255 }, format: { without: /[\r\n]/ }, allow_nil: true
   validates :subject, presence: true
   validates :body_html, presence: true
   validates :to_addresses, presence: true

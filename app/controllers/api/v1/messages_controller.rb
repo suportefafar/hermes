@@ -13,6 +13,7 @@ module Api
             api_client:   @current_client,
             status:       :malformed,
             from_address: message_params[:from_address],
+            from_name: nil,
             reply_to:     message_params[:reply_to],
             to_addresses:  normalize_addresses(message_params[:to_addresses]),
             cc_addresses:  normalize_addresses(message_params[:cc_addresses]),
@@ -31,6 +32,7 @@ module Api
           api_client:    @current_client,
           status:        :pending,
           from_address:  message_params[:from_address],
+          from_name: message_params[:from_name],
           reply_to:      message_params[:reply_to],
           to_addresses:  normalize_addresses(message_params[:to_addresses]),
           cc_addresses:  normalize_addresses(message_params[:cc_addresses]),
@@ -77,7 +79,7 @@ module Api
 
       def message_params
         params.permit(
-          :from_address, :reply_to, :subject, :body_html,
+          :from_address, :from_name, :reply_to, :subject, :body_html,
           :to_addresses, :cc_addresses, :bcc_addresses,
           to_addresses: [], cc_addresses: [], bcc_addresses: [],
           attachments: [ :filename, :content_type, :content ]
