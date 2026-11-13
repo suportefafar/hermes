@@ -33,6 +33,7 @@ jobs:
       - name: Test encryption configuration and sender handling
         run: |
           bundle exec ruby test/encryption_configuration_test.rb
+          bundle exec ruby test/encryption_rotation_test.rb
           bundle exec ruby test/seed_security_test.rb
           bundle exec ruby test/sender_name_test.rb
 

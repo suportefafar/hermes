@@ -12,7 +12,8 @@ class SmtpProvider < ApplicationRecord
   scope :primary, -> { active.first }
 
   # Encrypt password at rest using Rails encryption
-  encrypts :encrypted_password
+  previous_provider = HermesEncryption.previous_provider
+  encrypts :encrypted_password, previous: previous_provider ? [ { key_provider: previous_provider } ] : []
 
   def password
     encrypted_password

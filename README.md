@@ -143,3 +143,7 @@ requests.post(
     }
 )
 ```
+
+## Rotating encryption keys
+
+Provision new independent current keys privately. For the transition, also configure `HERMES_ENCRYPTION_PREVIOUS_PRIMARY_KEY` and `HERMES_ENCRYPTION_PREVIOUS_KEY_DERIVATION_SALT` with the existing values. Deploy the version that supports previous keys, then run `bin/rails hermes:rotate_encryption`. The task locks provider records, re-encrypts their passwords in a transaction and verifies decryption using only the current keys. After successful verification, remove both previous variables and recreate the service through your deployment workflow. Keep database backups aligned with the keys needed to restore them. Previous keys support SMTP password decryption only.
