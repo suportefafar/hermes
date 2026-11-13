@@ -74,5 +74,5 @@ Rails.application.configure do
   # config.generators.apply_rubocop_autocorrect_after_generate!
 
   # Allow access from local domain
-  config.hosts << "hermes.example.test"
+  config.hosts << ENV["HERMES_DEVELOPMENT_HOST"] if ENV["HERMES_DEVELOPMENT_HOST"].present?
 end

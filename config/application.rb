@@ -1,4 +1,5 @@
 require_relative "boot"
+require_relative "../lib/hermes_encryption"
 
 require "rails"
 # Pick the frameworks you want:
@@ -44,9 +45,9 @@ module Hermes
     # Disable ActiveStorage variant processor since we don't need image variants
     config.active_storage.variant_processor = :disabled
 
-    # Configure ActiveRecord Encryption using ENV variables or fallbacks
-    config.active_record.encryption.primary_key = ENV.fetch("HERMES_ENCRYPTION_PRIMARY_KEY")
-    config.active_record.encryption.deterministic_key = ENV.fetch("HERMES_ENCRYPTION_DETERMINISTIC_KEY")
-    config.active_record.encryption.key_derivation_salt = ENV.fetch("HERMES_ENCRYPTION_KEY_DERIVATION_SALT")
+    asset_build = defined?(Rake) && Rake.application.top_level_tasks == [ "assets:precompile" ]
+    HermesEncryption.keys(ENV, asset_build: asset_build).each do |name, value|
+      config.active_record.encryption.public_send("#{name}=", value)
+    end
   end
 end

@@ -46,7 +46,7 @@
 /.dockerignore
 /Dockerfile*
 
-# Deployment: exclude local configuration and credentials
+# Private exclude local configuration and credentials
 .env
 .env.*
 **/.env

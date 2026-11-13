@@ -12,7 +12,7 @@ class SenderNameTest < Minitest::Test
     captured = nil
     mailer.define_singleton_method(:mail) { |**options| captured = options }
     message = OpenStruct.new(body_html: "<p>Teste</p>", subject: "Teste", attachments: [],
-      to_addresses: ["person@example.test"], from_name: "Intranet FAFAR")
+      to_addresses: [ "person@example.test" ], from_name: "Intranet FAFAR")
     provider = OpenStruct.new(host: "smtp.example.test", port: 587, from_address: "sender@example.test")
     mailer.send_email(message, provider)
     address = Mail::Address.new(captured.fetch(:from))
@@ -24,7 +24,7 @@ class SenderNameTest < Minitest::Test
   end
 
   def test_rejects_header_injection
-    params = {"to_addresses" => ["person@example.test"], "subject" => "Teste", "body_html" => "Teste", "from_name" => "Bad\r\nBcc: other@example.test"}
+    params = { "to_addresses" => [ "person@example.test" ], "subject" => "Teste", "body_html" => "Teste", "from_name" => "Bad\r\nBcc: other@example.test" }
     assert_includes EmailValidator.validate(params), "from_name is invalid"
     params["from_name"] = "Intranet FAFAR"
     assert_empty EmailValidator.validate(params)

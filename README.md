@@ -17,16 +17,24 @@ All services must communicate with Hermes via the REST API.
 Before a service can send emails, an administrator must create an API Client in the [Hermes Dashboard](/dashboard/clients). 
 Generate the token, and store it securely in your service's environment variables.
 
-## Production configuration
+## Runtime configuration
 
-Configure private runtime environment variables before deployment.
+Provision a private `.env` from `.env.production.example` and keep it out of Git with mode `600`. Configure your database connection, session secret, administrator credentials and three independent encryption keys before starting the app. Generate each encryption key separately with `ruby -rsecurerandom -e 'puts SecureRandom.hex(32)'`. Development also requires private encryption keys; keep them stable so existing encrypted data remains readable.
+
+Set `HERMES_DESIGN_SYSTEM_URL` to the base URL of your design system assets (the directory containing `farmacia-ds.min.css`, `farmacia-ds.min.js` and `fonts/`). It defaults to `/design-system`. Set `HERMES_DEVELOPMENT_HOST` when using a custom local hostname. Configure these deployment-specific values in private environment files.
+
+After deployment, sign in at `/dashboard`, configure your SMTP provider, and create a separate API client for each application. Store each token privately; the dashboard displays it once.
+
+Asset compilation uses temporary encryption keys only with `SECRET_KEY_BASE_DUMMY=1`; never set this variable in the runtime environment.
+
+If an existing installation used the former public encryption defaults, stop and plan a data migration before changing keys. Preserve access to the old keys privately to decrypt and re-encrypt existing records, and rotate the SMTP credentials they protected. Removing Git history does not revoke credentials or remove third-party copies.
 
 ### 2. The Endpoint
 
 ```http
 POST http://hermes:80/api/v1/messages
 ```
-*(If calling from inside the Docker network, use `http://hermes:80`. If calling externally, use `https://hermes.example.com`)*
+*(If calling from inside the Docker network, use `http://hermes:80`. If calling externally, use `https://mail.example.com`)*
 
 ### 3. Request Headers
 

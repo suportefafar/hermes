@@ -37,8 +37,26 @@
 /app/assets/builds/*
 !/app/assets/builds/.keep
 
-# Deployment: local runtime configuration
+# Private local runtime configuration
 .env
 .env.*
 !/.env.example
 !/.env.production.example
+
+# Private credentials, exports and local agent configuration
+**/.env
+**/.env.*
+!/.env.example
+!/.env.production.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.sql
+*.dump
+*.sqlite*
+/config/credentials.yml.enc
+/config/credentials/
+/.aws/
+/.agents/
+/.codex/

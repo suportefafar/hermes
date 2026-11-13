@@ -1,17 +1,29 @@
-<% design_system_host = Rails.env.production? ? "https://design-system.example.com" : "#{request.protocol}design-system.example.test" %>
-<link id="farmacia-design-system-css" rel="stylesheet" href="<%= design_system_host %>/dist/latest/farmacia-ds.min.css" data-turbo-track="reload">
-<script id="farmacia-design-system-js" src="<%= design_system_host %>/dist/latest/farmacia-ds.min.js" defer data-turbo-track="reload"></script>
-<% unless Rails.env.production? %>
-  <script>
-    (() => {
-      const fallback = "https://design-system.example.com/dist/latest/";
-      const stylesheet = document.getElementById("farmacia-design-system-css");
-      const script = document.getElementById("farmacia-design-system-js");
-      stylesheet.addEventListener("error", () => { stylesheet.href = `${fallback}farmacia-ds.min.css`; }, { once: true });
-      script.addEventListener("error", () => { script.src = `${fallback}farmacia-ds.min.js`; }, { once: true });
-    })();
-  </script>
-<% end %>
+<% design_system_url = ENV.fetch("HERMES_DESIGN_SYSTEM_URL", "/design-system").delete_suffix("/") %>
+<link rel="stylesheet" href="<%= design_system_url %>/farmacia-ds.min.css" data-turbo-track="reload">
+<script src="<%= design_system_url %>/farmacia-ds.min.js" defer data-turbo-track="reload"></script>
+<style>
+  @font-face {
+    font-family: "DM Sans";
+    src: url("<%= design_system_url %>/fonts/dm-sans-latin.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 300 700;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "DM Mono";
+    src: url("<%= design_system_url %>/fonts/dm-mono-400-latin.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Playfair Display";
+    src: url("<%= design_system_url %>/fonts/playfair-display-latin.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+  }
+</style>
 <script>
   document.addEventListener("turbo:load", () => window.FFDS && window.FFDS.createIcons());
 </script>
